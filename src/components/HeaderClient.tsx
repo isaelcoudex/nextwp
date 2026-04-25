@@ -5,14 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MenuItem } from "@/lib/types";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { localePath } from "@/lib/i18n-config";
 
 interface HeaderClientProps {
   siteName: string;
   menuItems: MenuItem[];
   logoUrl?: string | null;
+  locale: string;
 }
 
-export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderClientProps) {
+export default function HeaderClient({ siteName, menuItems, logoUrl, locale }: HeaderClientProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,7 +54,7 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
     <>
       {/* ── Desktop header ── */}
       <div className="hidden md:flex max-w-6xl mx-auto px-4 py-2 items-center justify-between">
-        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+        <Link href={localePath(locale, "/")} className="flex items-center hover:opacity-80 transition-opacity">
           {logoUrl ? (
             <Image
               src={logoUrl}
@@ -73,7 +76,7 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
             rootItems.map((item) => (
               <Link
                 key={item.id}
-                href={item.path || item.url}
+                href={localePath(locale, item.path || item.url)}
                 className="text-sm font-medium text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2 rounded-lg transition-colors"
               >
                 {item.label}
@@ -82,13 +85,13 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
           ) : (
             <>
               <Link
-                href="/"
+                href={localePath(locale, "/")}
                 className="text-sm font-medium text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2 rounded-lg transition-colors"
               >
                 Home
               </Link>
               <Link
-                href="/posts"
+                href={localePath(locale, "/posts")}
                 className="text-sm font-medium text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2 rounded-lg transition-colors"
               >
                 Blog
@@ -98,19 +101,20 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
         </nav>
 
         {/* Busca desktop */}
-        <button
-          onClick={() => setSearchOpen((v) => !v)}
-          aria-label="Buscar"
-          className="ml-2 p-2 rounded-lg text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
-        >
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher currentLocale={locale} />
+          <button
+            onClick={() => setSearchOpen((v) => !v)}
+            aria-label="Buscar"
+            className="ml-2 p-2 rounded-lg text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
+          >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <circle cx="11" cy="11" r="7" />
             <line x1="16.5" y1="16.5" x2="22" y2="22" />
           </svg>
-        </button>
+          </button>
+        </div>
       </div>
-
-      {/* ── Mobile header ── */}
       <div className="flex md:hidden px-4 py-2 items-center justify-between" data-mobile-menu>
         {/* Botão hambúrguer */}
         <button
@@ -132,7 +136,7 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
 
         {/* Logo centralizada */}
         <Link
-          href="/"
+          href={localePath(locale, "/")}
           className="absolute left-1/2 -translate-x-1/2 flex items-center hover:opacity-80 transition-opacity"
         >
           {logoUrl ? (
@@ -172,7 +176,7 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
             rootItems.map((item) => (
               <Link
                 key={item.id}
-                href={item.path || item.url}
+                href={localePath(locale, item.path || item.url)}
                 onClick={() => setMenuOpen(false)}
                 className="block text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-3 rounded-xl transition-colors"
               >
@@ -181,8 +185,8 @@ export default function HeaderClient({ siteName, menuItems, logoUrl }: HeaderCli
             ))
           ) : (
             <>
-              <Link href="/" onClick={() => setMenuOpen(false)} className="block text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-3 rounded-xl transition-colors">Home</Link>
-              <Link href="/posts" onClick={() => setMenuOpen(false)} className="block text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-3 rounded-xl transition-colors">Blog</Link>
+              <Link href={localePath(locale, "/")} onClick={() => setMenuOpen(false)} className="block text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-3 rounded-xl transition-colors">Home</Link>
+              <Link href={localePath(locale, "/posts")} onClick={() => setMenuOpen(false)} className="block text-sm font-medium text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 px-4 py-3 rounded-xl transition-colors">Blog</Link>
             </>
           )}
         </div>

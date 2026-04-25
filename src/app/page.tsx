@@ -2,6 +2,7 @@ import { getAllPosts } from "@/lib/wordpress";
 import PostCard from "@/components/PostCard";
 import Pagination from "@/components/Pagination";
 import { Post } from "@/lib/types";
+import { getLocale } from "@/lib/locale";
 
 export const revalidate = 60;
 
@@ -14,6 +15,8 @@ interface HomePageProps {
 export default async function HomePage({ searchParams }: HomePageProps) {
   const { page } = await searchParams;
   const currentPage = Math.max(1, parseInt(page ?? "1", 10));
+
+  const locale = await getLocale();
 
   let posts: Post[] = [];
   let hasNextPage = false;
@@ -39,13 +42,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
+              <PostCard key={post.id} post={post} locale={locale} />
             ))}
           </div>
           <Pagination
             currentPage={currentPage}
             hasNextPage={hasNextPage}
             basePath="/"
+            locale={locale}
           />
         </>
       )}

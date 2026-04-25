@@ -8,6 +8,9 @@
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
+
+# Translation cache (generated at runtime)
+/.cache
 !.yarn/versions
 
 # testing

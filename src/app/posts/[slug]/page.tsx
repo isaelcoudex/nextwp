@@ -6,6 +6,9 @@ import { Metadata } from "next";
 import PostCard from "@/components/PostCard";
 import AdSlot from "@/components/AdSlot";
 import PostContent from "@/components/PostContent";
+import { getLocale, toDeeplLang } from "@/lib/locale";
+import { translateText, translateHtml } from "@/lib/translate";
+import { t, localePath } from "@/lib/i18n-config";
 
 export const revalidate = 60;
 
@@ -45,6 +48,15 @@ export default async function PostPage({ params }: PostPageProps) {
 
   if (!post) notFound();
 
+  const locale = await getLocale();
+  const lang = toDeeplLang(locale);
+
+  // Traduz título e conteúdo se não for PT
+  const [translatedTitle, translatedContent] = await Promise.all([
+    translateText(post.title, lang),
+    translateHtml(post.content || "", lang),
+  ]);
+
   const date = new Date(post.date).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",
@@ -76,7 +88,7 @@ export default async function PostPage({ params }: PostPageProps) {
     <article className="max-w-3xl mx-auto px-4 pt-2 pb-16">
       {/* ── Título ── */}
       <h1 className="text-xl md:text-2xl font-bold text-slate-900 mb-5 leading-snug tracking-tight">
-        {post.title}
+        {translatedTitle}
       </h1>
 
       {/* ── Anúncio após o título ── */}
@@ -98,7 +110,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* ── Conteúdo ── */}
       <PostContent
-        html={post.content || ""}
+        html={translatedContent}
         className="prose prose-slate prose-base max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-lg prose-h3:text-base prose-p:leading-relaxed prose-p:text-slate-600 prose-a:text-emerald-700 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl"
       />
 
@@ -110,7 +122,7 @@ export default async function PostPage({ params }: PostPageProps) {
             {post.categories.nodes.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/category/${cat.slug}`}
+                href={localePath(locale, `/category/${cat.slug}`)}
                 className="text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-full transition-colors"
               >
                 {cat.name}
@@ -153,7 +165,7 @@ export default async function PostPage({ params }: PostPageProps) {
           )}
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-emerald-700 mb-1">
-              Autor
+              {t(locale, "author")}
             </p>
             <p className="font-bold text-slate-900 text-lg leading-tight mb-2">
               {author.name}
@@ -170,10 +182,10 @@ export default async function PostPage({ params }: PostPageProps) {
       {/* ── Posts recomendados ── */}
       {recommended.length > 0 && (
         <section className="mt-14">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Leia também</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-6">{t(locale, "readAlso")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {recommended.map((p) => (
-              <PostCard key={p.id} post={p} compact />
+              <PostCard key={p.id} post={p} compact locale={locale} />
             ))}
           </div>
         </section>
