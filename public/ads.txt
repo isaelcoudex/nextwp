@@ -1,0 +1,11 @@
+# ads.txt - Authorized Digital Sellers
+# https://next.greenbest.com.br/ads.txt
+#
+# Formato: <dominio-adx>, <publisher-id>, DIRECT ou RESELLER, <id-certificacao>
+#
+# Exemplo Google AdSense/AdX:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# Substitua pub-XXXXXXXXXXXXXXXX pelo seu ID (NEXT_PUBLIC_ADX_CLIENT sem o "ca-")
+
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
