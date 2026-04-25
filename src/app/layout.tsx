@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -10,12 +9,7 @@ const GA_ID        = process.env.NEXT_PUBLIC_GA_ID;
 const GTM_ID       = process.env.NEXT_PUBLIC_GTM_ID;
 const FB_PIXEL     = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 const ADX_CLIENT   = process.env.NEXT_PUBLIC_ADX_CLIENT;
-const CUSTOM_SCRIPT = process.env.NEXT_PUBLIC_CUSTOM_SCRIPT_SRC; // ex: https://cdn.sendwebpush.com/...
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const CUSTOM_SCRIPT = process.env.NEXT_PUBLIC_CUSTOM_SCRIPT_SRC;
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, iconUrl] = await Promise.all([
@@ -38,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="pt-BR" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-slate-50">
         <Header />
         <main className="flex-1">{children}</main>
