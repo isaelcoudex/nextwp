@@ -29,13 +29,10 @@ export default async function Footer() {
     ),
   ]);
 
-  // Captura o host do site (SSR seguro)
+  // Captura o host do site (apenas client)
   let siteHost = "";
-  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_WORDPRESS_API_URL) {
-    try {
-      const url = new URL(process.env.NEXT_PUBLIC_WORDPRESS_API_URL);
-      siteHost = url.host;
-    } catch {}
+  if (typeof window !== "undefined") {
+    siteHost = window.location.host;
   }
 
   // Aviso legal fixo em PT
